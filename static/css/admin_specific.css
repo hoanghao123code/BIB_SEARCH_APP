@@ -1,0 +1,595 @@
+/* static/css/admin_specific.css */
+body.admin-page-background {
+    background-color: #f0f2f5; /* Nền khác cho trang admin */
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Login Page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 20px;
+}
+.login-card {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+.login-card h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.8em;
+}
+.login-card h2 i {
+    margin-right: 10px;
+    color: #007bff;
+}
+.form-group-login {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group-login label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.95em;
+}
+.form-group-login label i {
+    margin-right: 6px;
+}
+.form-group-login input[type="text"],
+.form-group-login input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.btn-submit-login {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-submit-login:hover {
+    background-color: #0056b3;
+}
+.btn-submit-login i {
+    margin-right: 8px;
+}
+.login-card .back-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+.login-card .back-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+.login-card .back-link a:hover {
+    text-decoration: underline;
+}
+
+
+/* Admin Panel Page */
+.admin-header {
+    background-color: #2c3e50; /* Màu nền header admin */
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.admin-login-container {
+    position: absolute; /* Hoặc 'fixed' nếu muốn nó luôn ở góc khi cuộn */
+    top: 15px;          /* Khoảng cách từ trên cùng của body (hoặc viewport nếu 'fixed') */
+    right: 20px;         /* Khoảng cách từ mép phải */
+    z-index: 1050;       /* Đảm bảo nó nổi trên navbar (nếu navbar có z-index thấp hơn) */
+}
+
+/* Style cho nút đăng nhập admin (chưa đăng nhập) */
+.btn-admin-login {
+    background-color: var(--primary-color); /* Sử dụng biến màu bạn đã định nghĩa */
+    color: white;
+    padding: 0.375rem 0.75rem; /* Tương đương btn-sm của Bootstrap */
+    font-size: 0.875rem;      /* Tương đương btn-sm của Bootstrap */
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    border: 1px solid var(--primary-color);
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    display: inline-flex; /* Để icon và text căn giữa */
+    align-items: center;
+}
+
+/* static/css/style.css */
+
+/* Container cho các nút/dropdown ở góc phải */
+.admin-login-container {
+    position: fixed; /* Hoặc 'absolute' nếu body có 'position: relative' */
+    top: 15px;       /* Khoảng cách từ mép trên của viewport/body */
+    right: 20px;      /* Khoảng cách từ mép phải của viewport/body */
+    z-index: 1050;    /* Đảm bảo nổi trên các phần tử khác, kể cả navbar nếu có */
+    display: flex;    /* Nếu có nhiều nút con muốn xếp hàng ngang */
+    align-items: center;
+    gap: 10px;        /* Khoảng cách giữa các nút con */
+}
+
+/* Nút trigger dropdown (Chào, admin) */
+.btn-admin-user.dropdown-toggle {
+    background-color: #4A5568; /* Màu xám đậm (ví dụ, bạn có thể dùng var(--secondary-color) hoặc var(--dark-color)) */
+    color: white;
+    border: none; /* Bỏ viền nếu không cần */
+    padding: 0.4rem 0.8rem; /* Điều chỉnh padding cho vừa vặn */
+    font-size: 0.875rem; /* Kích thước chữ nhỏ hơn một chút */
+    border-radius: 0.25rem; /* Bo góc */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Bóng đổ nhẹ */
+}
+
+.btn-admin-user.dropdown-toggle:hover,
+.btn-admin-user.dropdown-toggle:focus {
+    background-color: #2D3748; /* Màu đậm hơn khi hover/focus */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-admin-user.dropdown-toggle i {
+    margin-right: 0.4em;
+}
+
+/* Dropdown Menu */
+.admin-login-container .dropdown-menu {
+    /* Bootstrap đã có style cơ bản, bạn có thể tùy chỉnh thêm */
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Bóng đổ rõ hơn cho menu */
+    font-size: 0.9rem; /* Kích thước chữ trong các mục menu */
+    padding-top: 0.25rem; /* Giảm padding trên/dưới của menu một chút */
+    padding-bottom: 0.25rem;
+}
+
+/* Các mục trong Dropdown Menu */
+.admin-login-container .dropdown-item {
+    color: #212529; /* Màu chữ mặc định của Bootstrap cho text tối */
+    padding: 0.5rem 1rem; /* Điều chỉnh padding cho các mục */
+    display: flex;        /* Để icon và text căn giữa */
+    align-items: center;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out; /* Hiệu ứng mượt mà */
+}
+
+.admin-login-container .dropdown-item i {
+    margin-right: 0.6em;
+    width: 18px; /* Đảm bảo icon có không gian cố định */
+    text-align: center;
+    opacity: 0.7; /* Làm icon dịu hơn một chút */
+}
+
+.admin-login-container .dropdown-item:hover,
+.admin-login-container .dropdown-item:focus {
+    background-color: #e9ecef; /* Màu nền khi hover/focus (Bootstrap default light gray) */
+    color: #0056b3; /* Có thể đổi màu chữ khi hover nếu muốn */
+}
+.admin-login-container .dropdown-item:hover i,
+.admin-login-container .dropdown-item:focus i {
+    opacity: 1; /* Icon rõ hơn khi hover */
+}
+
+
+/* Nút Đăng nhập Admin (khi chưa đăng nhập) */
+.btn-admin-login-trigger, /* Nếu bạn dùng nút này để mở modal */
+a.btn-admin-login { /* Nếu bạn dùng thẻ <a> để link trực tiếp */
+    background-color: #007bff; /* var(--primary-color) */
+    color: white;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    border: 1px solid transparent; /* Hoặc 1px solid var(--primary-color) */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-admin-login-trigger:hover,
+a.btn-admin-login:hover {
+    background-color: #0056b3; /* Đậm hơn */
+    color: white;
+    text-decoration: none;
+}
+
+.btn-admin-login-trigger i,
+a.btn-admin-login i {
+    margin-right: 0.4em;
+}
+
+
+
+.container-admin-header {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.admin-header h1 {
+    margin: 0;
+    font-size: 1.6em;
+}
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.admin-user-info span i {
+    margin-right: 5px;
+}
+.btn-logout {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: none;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+.btn-logout:hover {
+    background-color: #c0392b;
+}
+.btn-logout i {
+    margin-right: 6px;
+}
+
+.container-admin-panel {
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+    flex-grow: 1;
+}
+.upload-section-card {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+.upload-section-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.5em;
+}
+.upload-section-card h3 i {
+    margin-right: 10px;
+    color: #007bff;
+}
+.upload-section-card .instructions {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.form-group-upload {
+    margin-bottom: 20px;
+}
+.form-group-upload label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+.form-group-upload label i {
+    margin-right: 6px;
+}
+.form-group-upload input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.btn-submit-upload {
+    background-color: #28a745; /* Màu xanh lá */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-submit-upload:hover {
+    background-color: #218838;
+}
+.btn-submit-upload i {
+    margin-right: 8px;
+}
+#processing-indicator-admin {
+    margin-top: 15px;
+    font-style: italic;
+    color: #555;
+}
+#processing-indicator-admin i {
+    margin-right: 5px;
+}
+.back-link-panel {
+    text-align: center;
+    margin-top: 20px;
+}
+.back-link-panel a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.95em;
+}
+.back-link-panel a:hover {
+    text-decoration: underline;
+}
+
+/* Footer chung cho các trang admin */
+.admin-footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: #343a40; /* Màu tối */
+    color: #adb5bd; /* Màu chữ nhạt */
+    font-size: 0.85em;
+    /* margin-top: auto; Đảm bảo nó ở cuối nếu dùng flexbox cho body */
+}
+
+/* static/css/admin_specific.css hoặc trong <style> của admin_base.html */
+
+/* Thông báo AJAX */
+#ajaxCreateUserMessage {
+    margin-top: 1rem;
+    display: none; /* Ẩn ban đầu */
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9em;
+}
+
+/* Nút submit khi đang xử lý AJAX */
+.btn-submitting .fa-check-circle { /* Ẩn icon mặc định */
+    display: none;
+}
+.btn-submitting .spinner-border-sm { /* Hiện spinner */
+    display: inline-block !important; /* Ghi đè display:none ban đầu của spinner trong Bootstrap */
+}
+
+/* CSS dành riêng cho admin_race_management.html */
+
+/* Tiêu đề trang */
+.admin-page-content h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-page-content h2 i {
+    color: #3498db; /* Màu xanh cho icon */
+}
+
+/* Flash Messages */
+.alert {
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alert-success {
+    background-color: #e7f4e4;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert .btn-close {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Form tải ảnh bìa */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #34495e;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-select,
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    outline: none;
+}
+
+.form-control[type="file"] {
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+.btn-primary i {
+    margin-right: 0.5rem;
+}
+
+#uploadStatus {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.text-success {
+    background-color: #e7f4e4;
+    color: #155724;
+}
+
+.text-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Danh sách giải chạy */
+.row-cols-1 > .col,
+.row-cols-md-2 > .col,
+.row-cols-lg-3 > .col {
+    transition: transform 0.3s ease;
+}
+
+.card.h-100 {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.h-100:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.card-text i {
+    margin-right: 0.5rem;
+    color: #3498db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    .card-img-top {
+        height: 150px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Trong file CSS tùy chỉnh của bạn hoặc thẻ <style> trong admin_base.html */
+#roleFilter.form-select { /* Hoặc chỉ .form-select nếu muốn áp dụng cho tất cả */
+    padding-right: 2.5rem; /* Giá trị mặc định của Bootstrap thường là 1.75rem hoặc tương tự. Tăng lên một chút. */
+                           /* Bạn có thể cần điều chỉnh giá trị này. */
+}
+
+/* Nếu bạn vẫn đang dùng form-select-sm */
+#roleFilter.form-select-sm {
+    padding-right: 2.25rem; /* Tăng tương ứng cho bản sm */
+}

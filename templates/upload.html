@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm Kiếm Ảnh Vận Động Viên Theo BIB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+        /* ... (CSS cho top-right-controls và các style khác của bạn) ... */
+        .ajax-loader { display: none; text-align: center; padding: 20px; }
+        .ajax-loader .spinner-border { width: 3rem; height: 3rem; }
+        /* Style cho nút tìm kiếm khi đang loading */
+        .btn-searching { cursor: not-allowed; }
+        .btn-searching .fas.fa-search { display: none; }
+        .btn-searching .spinner-border-sm { display: inline-block !important; }
+    </style>
+<body>
+    <div class="admin-login-container">
+        {% if admin_logged_in %}
+            <div class="dropdown">
+                <button class="btn btn-sm dropdown-toggle btn-admin-user" type="button" id="adminUserDropdownTop" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-shield"></i> Chào, {{ admin_username or "Admin" }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminUserDropdownTop">
+                    <li><a class="dropdown-item" href="{{ url_for('admin.upload_photos_zip_route') }}"><i class="fas fa-upload"></i> Tải Ảnh ZIP</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.admin_logout_route') }}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                </ul>
+            </div>
+        {% else %}
+            <a class="btn btn-sm btn-admin-login" href="{{ url_for('admin.admin_login_route') }}">
+                <i class="fas fa-user-shield"></i> Đăng nhập
+            </a>
+        {% endif %}
+    </div>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('user.index_route') }}" class="navbar-brand">
+                <i class="fas fa-camera-retro"></i> Bib Photo Finder
+            </a>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1>Tìm Ảnh Chạy Bộ Của Bạn</h1>
+            <p class="subtitle">Nhập số BIB hoặc chọn khoảnh khắc để tìm kiếm ảnh của bạn!</p>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <!-- ... (Flash Messages) ... -->
+
+        <section class="search-panel card">
+            <!-- Sử dụng method GET -->
+            <form method="GET" action="{{ url_for(request.endpoint) }}" class="search-form">
+                <div class="form-group">
+                    <label for="bib_number" class="form-label"><i class="fas fa-id-badge"></i> Nhập số BIB (tùy chọn):</label>
+                    <input type="text" id="bib_number" name="bib_number" class="form-control"
+                           value="{{ search_term or '' }}" placeholder="Ví dụ: 1234">
+                </div>
+
+                <div class="form-group">
+                    <label for="race_event_filter" class="form-label"><i class="fas fa-trophy"></i> Chọn Giải Chạy:</label>
+                    <select id="race_event_filter" name="race_event_filter" class="form-control" onchange="this.form.submit()">
+                        <!-- Bỏ option "Tất cả các giải" nếu bạn muốn luôn có một giải được chọn -->
+                        <!-- Hoặc giữ lại và xử lý logic "all" ở backend nếu cần -->
+                        {% if not all_races %}
+                            <option value="" disabled selected>Không có giải chạy nào</option>
+                        {% else %}
+                            <!-- <option value="all" {% if selected_race_event == 'all' %}selected{% endif %}>Tất cả các giải</option> -->
+                            {% for race in all_races %}
+                            <option value="{{ race.name }}" {% if selected_race_event == race.name %}selected{% endif %}>
+                                {{ race.name }}
+                            </option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="track_filter" class="form-label"><i class="fas fa-road"></i> Lọc theo đường chạy:</label>
+                    <select id="track_filter" name="track_filter" class="form-control" {% if not tracks_for_selected_event %}disabled{% endif %}>
+                        <option value="all" {% if selected_track == 'all' %}selected{% endif %}>Tất cả các đường</option>
+                        {% if tracks_for_selected_event %}
+                            {% for track_item in tracks_for_selected_event %}
+                            <option value="{{ track_item }}" {% if selected_track == track_item %}selected{% endif %}>
+                                {{ track_item }}
+                            </option>
+                            {% endfor %}
+                        {% else %}
+                             {% if selected_race_event and selected_race_event != 'all' %} 
+                             <!-- Chỉ hiển thị "không có track" nếu một giải cụ thể đã được chọn mà không có track -->
+                            <option value="" disabled>Không có đường chạy cho giải này</option>
+                            {% endif %}
+                        {% endif %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm Kiếm / Lọc</button>
+            </form>
+        </section>
+
+        <section class="results-gallery">
+            <h2 class="section-title">
+                {% if search_term %}
+                    Kết quả cho BIB "{{ search_term }}"
+                    {% if selected_race_event and selected_race_event != 'all' %}
+                        trong giải "{{ selected_race_event }}"
+                    {% endif %}
+                {% elif selected_race_event and selected_race_event != 'all' %}
+                    Ảnh từ giải "{{ selected_race_event }}"
+                {% else %}
+                    Vui lòng chọn giải chạy hoặc nhập số BIB
+                {% endif %}
+                
+                {% if selected_track != 'all' and selected_track %}
+                    trên đường "{{ selected_track }}"
+                {% endif %}
+            </h2>
+            
+            <!-- ... (Phần hiển thị ảnh images_found giữ nguyên) ... -->
+            {% if images_found %}
+                <!-- ... image-grid ... -->
+            {% else %}
+                 {% if search_term or (selected_race_event and selected_race_event != 'all') %} 
+                <div class="no-results-message card">
+                    <i class="fas fa-images fa-3x"></i>
+                    <p>Không tìm thấy ảnh nào phù hợp với tiêu chí của bạn.</p>
+                </div>
+                {% elif not all_races %}
+                <div class="no-results-message card">
+                    <i class="fas fa-calendar-times fa-3x"></i>
+                    <p>Hiện tại chưa có thông tin giải chạy nào.</p>
+                    <p>Quản trị viên cần tải lên dữ liệu giải chạy.</p>
+                </div>
+                {% endif %}
+            {% endif %}
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div class="container">
+            <p>© {{ current_year }} Bib Photo Finder. Phát triển bởi Hoàng Hào.</p>
+        </div>
+    </footer>
+    <script>
+        // Optional: Small script for active nav link or other enhancements
+        // Đặt trong <script> ở cuối file index.html của user
+        document.addEventListener('DOMContentLoaded', function() {
+            const raceEventFilter = document.getElementById('race_event_filter');
+            const trackFilterSelect = document.getElementById('track_filter');
+
+            if (raceEventFilter && trackFilterSelect) {
+                raceEventFilter.addEventListener('change', function() {
+                    const selectedRaceFullName = this.value; // Đây là tên đầy đủ của giải
+                    
+                    // Xóa các option cũ của track (trừ option "Tất cả các đường")
+                    while (trackFilterSelect.options.length > 1) {
+                        trackFilterSelect.remove(1);
+                    }
+
+                    if (selectedRaceFullName && selectedRaceFullName !== 'all') {
+                        // Gọi AJAX để lấy track cho giải đã chọn
+                        // Sử dụng encodeURIComponent cho event_name_full nếu nó có ký tự đặc biệt
+                        const encodedEventName = encodeURIComponent(selectedRaceFullName);
+                        fetch(`{{ url_for('user.get_moments_for_event_ajax', event_name='RACE_PLACEHOLDER') }}`.replace('RACE_PLACEHOLDER', encodedEventName))
+                            .then(response => {
+                                if (!response.ok) throw new Error('Network response was not ok');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.tracks && data.tracks.length > 0) {
+                                    data.tracks.forEach(function(trackName) {
+                                        const option = new Option(trackName, trackName);
+                                        trackFilterSelect.add(option);
+                                    });
+                                } else if (data.error) {
+                                    console.error("Lỗi AJAX lấy tracks: ", data.error);
+                                }
+                            })
+                            .catch(error => console.error('Lỗi fetch tracks:', error));
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

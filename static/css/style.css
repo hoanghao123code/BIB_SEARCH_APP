@@ -1,0 +1,614 @@
+/* /Global Resets and Base Styles */
+:root {
+    --primary-color: #007bff; /* Xanh dương làm màu chủ đạo */
+    --secondary-color: #6c757d; /* Xám cho text phụ */
+    --light-color: #f8f9fa; /* Nền sáng */
+    --dark-color: #343a40; /* Nền tối */
+    --success-color: #28a745; /* Xanh lá */
+    --danger-color: #dc3545; /* Đỏ */
+    --warning-color: #ffc107; /* Vàng */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 0.3rem;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    background-color: #eef2f7; /* Nền xám xanh nhẹ nhàng hơn */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+body {
+    position: relative; /* Cần thiết để định vị .admin-login-container */
+    /* Nếu navbar của bạn là fixed-top, bạn cần padding-top cho body */
+    /* ví dụ: padding-top: 70px; (điều chỉnh theo chiều cao navbar) */
+}
+
+.admin-login-container {
+    position: absolute; /* Hoặc 'fixed' nếu muốn nó luôn ở góc khi cuộn */
+    top: 15px;          /* Khoảng cách từ trên cùng của body (hoặc viewport nếu 'fixed') */
+    right: 20px;         /* Khoảng cách từ mép phải */
+    z-index: 1050;       /* Đảm bảo nó nổi trên navbar (nếu navbar có z-index thấp hơn) */
+}
+
+/* Style cho nút đăng nhập admin (chưa đăng nhập) */
+.btn-admin-login {
+    background-color: var(--primary-color); /* Sử dụng biến màu bạn đã định nghĩa */
+    color: white;
+    padding: 0.375rem 0.75rem; /* Tương đương btn-sm của Bootstrap */
+    font-size: 0.875rem;      /* Tương đương btn-sm của Bootstrap */
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    border: 1px solid var(--primary-color);
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    display: inline-flex; /* Để icon và text căn giữa */
+    align-items: center;
+}
+
+.btn-admin-login:hover {
+    background-color: #0056b3; /* Màu đậm hơn của primary-color */
+    border-color: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-admin-login i {
+    margin-right: 0.35rem;
+}
+
+/* Style cho nút hiển thị tên admin (đã đăng nhập) - sử dụng class của Bootstrap làm nền */
+.btn-admin-user.dropdown-toggle {
+    background-color: var(--secondary-color); /* Hoặc một màu khác bạn muốn */
+    border-color: var(--secondary-color);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.btn-admin-user.dropdown-toggle:hover,
+.btn-admin-user.dropdown-toggle:focus {
+    background-color: #5a6268; /* Màu đậm hơn của secondary-color */
+    border-color: #545b62;
+    color: white;
+}
+
+/* Đảm bảo các item trong dropdown có màu chữ phù hợp với nền */
+.admin-login-container .dropdown-menu {
+    /* Bootstrap thường xử lý việc này tốt, nhưng bạn có thể tùy chỉnh thêm nếu cần */
+    font-size: 0.9rem; /* Điều chỉnh kích thước chữ trong dropdown */
+}
+
+.admin-login-container .dropdown-item {
+    display: flex;
+    align-items: center;
+}
+.admin-login-container .dropdown-item i {
+    margin-right: 0.5rem;
+    width: 16px; /* Căn chỉnh icon */
+    text-align: center;
+}
+
+
+/* Navbar */
+.navbar {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    padding: 1rem 0;
+    box-shadow: var(--box-shadow);
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--light-color);
+    display: flex;
+    align-items: center;
+}
+.navbar-brand i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+.navbar-brand:hover {
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/static/images/back_ground.png"); /* Thay bằng ảnh nền đẹp hơn */
+    background-size: cover;
+    background-position: center;
+    color: var(--light-color);
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero-section .subtitle {
+    font-size: 1.2rem;
+    color: #e0e0e0;
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1; /* Đẩy footer xuống dưới */
+}
+
+/* Card Style */
+.card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Search Panel */
+.search-panel {
+    border-left: 5px solid var(--primary-color);
+}
+
+.search-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    align-items: end; /* Căn các item trong form xuống dưới */
+}
+
+.search-form .form-label { /* Style chung cho các label trong search form */
+    font-weight: 600;
+    margin-bottom: 0.5rem; /* Giữ nguyên */
+    color: var(--secondary-color); /* Giữ nguyên */
+    display: flex; /* Giữ nguyên */
+    align-items: center; /* Giữ nguyên */
+    font-size: 0.95em; /* Có thể điều chỉnh kích thước chữ label */
+}
+
+.search-form .form-label i { /* Style cho icon trong label */
+    margin-right: 0.6em; /* Tăng khoảng cách icon với text một chút */
+    color: var(--primary-color); /* Giữ nguyên */
+    font-size: 1.1em; /* Làm icon to hơn một chút so với text label */
+    opacity: 0.85;
+}
+
+
+.search-form select.form-control {
+    appearance: none; /* Bỏ giao diện mặc định của select box */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E"); /* Icon mũi tên tùy chỉnh */
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center; /* Vị trí icon mũi tên */
+    background-size: 16px 12px; /* Kích thước icon mũi tên */
+    padding-right: 2.5rem; /* Tạo không gian cho icon mũi tên */
+    cursor: pointer;
+}
+
+.search-form select.form-control:focus {
+    /* Giữ nguyên style focus hoặc điều chỉnh */
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Nút tìm kiếm (class .btn-primary đã có style từ trước) */
+/* Bạn có thể muốn điều chỉnh vị trí của nó nếu form có nhiều cột */
+.search-form button.btn-primary {
+    /* Nếu form của bạn là grid và bạn muốn nút chiếm hết một cột trên màn hình nhỏ,
+       hoặc căn chỉnh đặc biệt, bạn có thể cần thêm CSS ở đây.
+       Ví dụ, nếu trên mobile bạn muốn nó xuống dòng và full width:
+    */
+    /* @media (max-width: 768px) {
+        grid-column: 1 / -1; // Chiếm toàn bộ các cột của grid
+        margin-top: 0.5rem; // Thêm chút khoảng cách nếu nó bị đẩy xuống
+    } */
+    padding-top: 0.65rem; /* Điều chỉnh padding để cân đối hơn với input/select */
+    padding-bottom: 0.65rem;
+}
+
+/* Responsive cho search form nếu cần thiết */
+@media (max-width: 992px) { /* Ví dụ cho màn hình nhỏ hơn large */
+    .search-form {
+        /* Có thể bạn muốn các item trong form xếp thành 2 cột thay vì 3 */
+        /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));  (giữ nguyên nếu đã có) */
+        /* Hoặc grid-template-columns: 1fr 1fr; nếu muốn cố định 2 cột */
+    }
+}
+
+@media (max-width: 576px) { /* Ví dụ cho màn hình rất nhỏ */
+    .search-form {
+        grid-template-columns: 1fr; /* Mỗi item một hàng */
+        gap: 1rem; /* Giảm khoảng cách */
+    }
+    .search-form .form-label {
+        font-size: 0.9em;
+    }
+    .search-form .form-control,
+    .search-form button.btn-primary {
+        font-size: 0.95rem;
+        padding: 0.6rem 0.75rem;
+    }
+    .search-form select.form-control {
+        padding-right: 2rem;
+        background-size: 14px 10px;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+}
+.form-label i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex; /* Cho phép icon và text căn giữa */
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    transition: all 0.15s ease-in-out;
+    white-space: nowrap; /* Ngăn text xuống dòng trong button */
+}
+.btn i {
+    margin-right: 0.5rem;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Results Gallery */
+.results-gallery .section-title {
+    font-size: 1.8rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+.results-gallery .section-title::after { /* Đường gạch chân trang trí */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* .image-card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden; /* Để bo góc ảnh bên trong */
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.image-card img {
+    width: 100%;
+    height: 200px; /* Chiều cao cố định cho ảnh, điều chỉnh nếu cần */
+    /* object-fit: cover; /* Đảm bảo ảnh lấp đầy, cắt nếu cần */
+/* }
+
+.image-card .image-info {
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+.image-card .image-info p {
+    margin-bottom: 0.3rem;
+}  */
+
+
+/* No Results Message */
+/* .no-results-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+}
+.no-results-message i {
+    color: var(--warning-color);
+    margin-bottom: 1rem;
+}
+.no-results-message p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+} */
+
+.no-results-message {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+.no-results-message[style*="block"] {
+    opacity: 1;
+}
+
+
+/* Footer */
+.site-footer {
+    background-color: var(--dark-color);
+    color: #aaa;
+    padding: 1.5rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: auto; /* Đảm bảo footer luôn ở cuối trang */
+}
+
+/* Responsive adjustments (ví dụ) */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+    .hero-section .subtitle {
+        font-size: 1rem;
+    }
+    .search-form {
+        grid-template-columns: 1fr; /* Form thành 1 cột trên màn hình nhỏ */
+    }
+    .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+} 
+
+/* static/css/style.css */
+/* ... (CSS hiện tại của bạn) ... */
+
+/* --- Image Modal Styles --- */
+.image-modal-overlay {
+    display: none; /* Ẩn ban đầu */
+    position: fixed; /* Luôn ở trên cùng */
+    z-index: 1060; /* Cao hơn hầu hết các phần tử khác */
+    padding-top: 50px; /* Khoảng cách từ trên xuống */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Cho phép cuộn nếu ảnh quá lớn */
+    background-color: rgba(0, 0, 0, 0.85); /* Nền đen mờ */
+    transition: opacity 0.3s ease;
+}
+
+.image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 85%;
+    max-height: 80vh; /* Giới hạn chiều cao để vừa màn hình */
+    animation-name: zoomIn;
+    animation-duration: 0.4s;
+}
+
+@keyframes zoomIn {
+    from {transform: scale(0.5); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+.image-modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.image-modal-close-btn:hover,
+.image-modal-close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+.image-modal-caption {
+    margin: 15px auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    font-size: 0.9em;
+}
+
+.image-modal-download-btn {
+    display: block;
+    width: fit-content; /* Hoặc đặt width cố định */
+    margin: 15px auto;
+    padding: 10px 20px;
+    background-color: #007bff; /* var(--primary-color) */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px; /* var(--border-radius) */
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+.image-modal-download-btn:hover {
+    background-color: #0056b3; /* Đậm hơn */
+    color: white;
+    text-decoration: none;
+}
+.image-modal-download-btn i {
+    margin-right: 8px;
+}
+
+.image-card {
+    background-color: #fff;
+    border-radius: var(--border-radius); /* Giả sử bạn có biến --border-radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Giả sử có biến --box-shadow */
+    overflow: hidden; /* QUAN TRỌNG: Ngăn nội dung tràn ra ngoài card */
+    margin-bottom: 1.5rem; /* Khoảng cách giữa các card */
+    /* Bạn có thể muốn đặt một chiều rộng tối đa hoặc cố định cho card nếu cần */
+    /* max-width: 300px; */
+}
+
+.image-card img.thumbnail-image { /* Hoặc chỉ .thumbnail-image nếu class này chỉ dùng cho ảnh trong card */
+    display: block; /* Đảm bảo ảnh chiếm toàn bộ chiều rộng và không có khoảng trắng thừa bên dưới */
+    width: 100%;   /* Ảnh sẽ co giãn theo chiều rộng của card */
+    height: auto;  /* Chiều cao tự động điều chỉnh theo tỉ lệ */
+    /* Bạn có thể muốn đặt một chiều cao cố định và dùng object-fit nếu muốn tất cả ảnh cao bằng nhau */
+    /* height: 200px; */
+    /* object-fit: cover; */ /* Sẽ cắt ảnh để vừa, giữ tỉ lệ */
+}
+
+.image-card .image-info {
+    padding: 1rem;      /* Khoảng đệm cho text */
+    font-size: 0.9rem;
+    color: var(--secondary-color); /* Giả sử có biến --secondary-color */
+}
+
+.image-card .image-info p {
+    margin-bottom: 0.3rem; /* Khoảng cách giữa các dòng text */
+    line-height: 1.4;
+}
+
+.image-card .image-info p strong {
+    color: #333; /* Làm nổi bật label */
+}
+
+/* CSS cho Race Cards */
+.race-summary-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer; /* Cho người dùng biết là có thể click */
+    display: flex; /* Sử dụng flexbox để sắp xếp ảnh và nội dung */
+    flex-direction: column; /* Sắp xếp các item con theo chiều dọc */
+    height: 100%; /* Để các card có chiều cao bằng nhau nếu trong grid */
+}
+
+.race-summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.race-summary-card img.race-cover-image {
+    width: 100%;
+    height: 180px; /* Điều chỉnh chiều cao ảnh bìa */
+    object-fit: cover;
+}
+
+.race-summary-info {
+    padding: 15px;
+    flex-grow: 1; /* Cho phép phần info co giãn để lấp đầy card */
+    display: flex;
+    flex-direction: column;
+}
+
+.race-summary-info h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+    color: #333;
+}
+
+.race-summary-info p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+.race-summary-info p small {
+    color: #888;
+}
+
+/* Điều chỉnh image-grid để phù hợp với cả race cards và image cards */
+.image-grid {
+    display: grid;
+    /* Điều chỉnh minmax để race cards trông đẹp hơn, có thể cần lớn hơn image cards */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Ví dụ: 280px cho race cards */
+    gap: 20px; /* Hoặc 1rem */
+}

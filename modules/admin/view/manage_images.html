@@ -1,0 +1,69 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Quản lý ảnh{% endblock %}
+
+{% block page_content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="fas fa-images me-2"></i> Quản lý ảnh</h2>
+
+    <!-- Thông báo AJAX -->
+    <div id="ajaxMessage" class="alert" role="alert" style="display: none;"></div>
+
+    <!-- Bộ lọc -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="raceEventFilter" class="form-label">Chọn giải chạy:</label>
+                    <select id="raceEventFilter" class="form-select">
+                        <option value="all">Tất cả giải chạy</option>
+                        {% if all_races %}
+                            {% for race in all_races %}
+                                <option value="{{ race.event_name }}">{{ race.event_name }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="momentFilter" class="form-label">Chọn khoảnh khắc:</label>
+                    <select id="momentFilter" class="form-select" disabled>
+                        <option value="all">Tất cả khoảnh khắc</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pagination-data" class="d-none" data-total-images="{{ total_images | default(0) }}"></div>
+    <!-- Danh sách ảnh với phân trang -->
+    <div class="card">
+        <div class="card-body">
+            <h5 id="resultsTitle" class="card-title mb-3">Danh sách ảnh</h5>
+            <div id="imageGridContainer" class = "row"></div>
+            <div id="noResultsMessage" class="alert alert-info" style="display: none;">
+                <p>Không tìm thấy ảnh nào phù hợp.</p>
+            </div>
+            <div id="ajaxLoadingIndicator" class="text-center" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    window.ajaxEndpoints = {
+        adminDeleteImage: "{{ url_for('admin.delete_image_route') }}",
+        searchImages: "{{ url_for('admin.search_images_route') }}",
+        getMoments: "{{ url_for('admin.get_moments_route', race_name='RACE_PLACEHOLDER') }}",
+        serveImage: "{{ url_for('user.serve_image', filepath='PATH_PLACEHOLDER') }}"
+    };
+    const paginationData = document.getElementById('pagination-data');
+    window.totalImages = parseInt(paginationData.dataset.totalImages) || 0;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/script_manage_images.js') }}"></script>
+{% endblock %}

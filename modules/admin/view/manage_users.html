@@ -1,0 +1,140 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Quản lý Người Dùng{% endblock %}
+
+{% block page_content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">Quản lý users</h2>
+    
+    <div id="globalUserMessage" class="alert" role="alert" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;"></div>
+    <!-- Thanh điều khiển -->
+    <div class="mb-4 d-flex justify-content-end align-items-center"> <!-- Thêm align-items-center để căn giữa theo chiều dọc -->
+        <!-- Dropdown Lọc theo Vai trò -->
+        <div class="me-3"> <!-- Thêm khoảng cách bên phải dropdown -->
+            <label for="roleFilter" class="form-label visually-hidden">Lọc theo vai trò:</label> <!-- Label ẩn cho accessibility -->
+            <select id="roleFilter" class="form-select form-select-sm" aria-label="Lọc theo vai trò">
+                <option value="">Tất cả vai trò</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <!-- Thêm các vai trò khác nếu có -->
+            </select>
+        </div>
+
+        <!-- Nhóm nút hành động -->
+        <div class="btn-group" role="group">
+            <button id="btnEdit" class="btn btn-primary btn-sm disabled" data-bs-toggle="modal" data-bs-target="#updateUserModal">
+                <i class="fas fa-edit"></i> Sửa
+            </button>
+            <button id="btnChangePassword" class="btn btn-warning btn-sm disabled" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                <i class="fas fa-key"></i> Đổi mật khẩu
+            </button>
+            <button id="btnDelete" class="btn btn-danger btn-sm disabled">
+                <i class="fas fa-trash-alt"></i> Xóa
+            </button>
+        </div>
+    </div>
+
+    <div id="noResultsMessage" style="display: none;" class="alert alert-warning text-center mt-3 mb-3">
+        <p>Không tìm thấy người dùng nào.</p>
+    </div>
+
+    <div class="table-responsive">
+        <table id="userTable" class="table table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Ngày tạo</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="pagination-container" class="d-flex justify-content-center mt-3"></div>
+    <div id="pagination-data" data-total-users="{{ total_users }}" style="display: none;"></div>
+</div>
+
+<!-- Modal cập nhật người dùng -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="updateUserModalLabel">Cập nhật thông tin người dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateUserForm">
+                    <input type="hidden" id="updateUserId">
+                    <div class="mb-3">
+                        <label for="updateUsername" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="updateUsername" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="updateEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateRole" class="form-label">Vai trò</label>
+                        <select class="form-control" id="updateRole">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal đổi mật khẩu -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu người dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <input type="hidden" id="changePasswordUserId">
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rePassword" class="form-label">Xác nhận mật khẩu</label>
+                        <input type="password" class="form-control" id="rePassword" required>
+                    </div>
+                    <div id="passwordMismatchError" class="text-danger" style="display: none;">
+                        Mật khẩu và xác nhận mật khẩu không khớp.
+                    </div>
+                    <button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    window.ajaxEndpoints = {
+        searchUsers: "{{ url_for('admin.search_users_route') }}",
+        updateUser: "{{ url_for('admin.update_user_route') }}",
+        changeUserPassword: "{{ url_for('admin.change_password_route') }}",
+        deleteUser: "{{ url_for('admin.delete_user_route') }}"
+    };
+    const paginationData = document.getElementById('pagination-data');
+    if (paginationData) {
+        window.totalUsers = parseInt(paginationData.dataset.totalUsers) || 0;
+    } else {
+        window.totalUsers = 0;
+        console.warn('Element with id "pagination-data" not found.');
+    }
+</script>
+<script src="{{ url_for('static', filename='js/script_manage_users.js') }}"></script>
+{% endblock %}

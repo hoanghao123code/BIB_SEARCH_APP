@@ -1,0 +1,6 @@
+/__pycache__
+.env
+/venv
+/images_dataset
+/static/images
+face-detection-2024-firebase-adminsdk-pevrv-ac44662dfc.json

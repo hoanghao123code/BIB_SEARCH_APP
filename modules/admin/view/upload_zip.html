@@ -1,0 +1,108 @@
+{% extends "admin_panel.html" %}
+
+{% block title %}{{ title or "Tải lên ảnh ZIP" }}{% endblock %}
+
+{% block head_extra %}
+<style>
+    .upload-panel {
+        border-left: 5px solid var(--bs-success); /* Màu xanh lá cho upload */
+    }
+    .folder-structure-example {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        font-family: monospace;
+        white-space: pre;
+        font-size: 0.9em;
+    }
+    .upload-instructions {
+        margin-bottom: 0.5rem;
+    }
+    .form-label i, .btn i {
+        margin-right: 0.3rem;
+    }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="container mt-3"> 
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm upload-panel">
+                <div class="card-header bg-light">
+                    <h3 class="text-center mb-0 py-1">{{ title or "Tải lên thư mục ảnh (ZIP)" }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    Khu vực hiển thị Flash Messages 
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                                    {{ message | safe }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <p class="upload-instructions text-muted">
+                        Nén thư mục ảnh thành file <strong>.ZIP</strong> và tải lên. Cấu trúc khuyến nghị:
+                    </p>
+                    <div class="folder-structure-example mb-4">
+
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" class="upload-form" action="{{ url_for('admin.upload_zip_route') }}">
+                        {{ form.hidden_tag() if form and form.hidden_tag }}
+                        
+                        <div class="mb-4 form-group">
+                            <label for="zipfile" class="form-label fs-5"><i class="fas fa-file-archive text-primary"></i> Chọn file .ZIP:</label>
+                            <input type="file" name="zipfile" id="zipfile" class="form-control form-control-lg" accept=".zip" required>
+                            <div class="form-text">Chỉ chấp nhận file có định dạng .zip.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg submit-btn">
+                                <i class="fas fa-upload"></i> Tải lên và Xử lý
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="processing-indicator" class="mt-4 text-center" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang xử lý...</span>
+                        </div>
+                        <p class="mt-2 mb-0 fw-bold">Đang xử lý file ZIP, vui lòng đợi...</p>
+                        <p class="text-muted small">Quá trình này có thể mất vài phút tùy thuộc vào kích thước file.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadForm = document.querySelector('.upload-form');
+    const processingIndicator = document.getElementById('processing-indicator');
+    const submitButton = uploadForm ? uploadForm.querySelector('button.submit-btn') : null;
+
+    if (uploadForm && processingIndicator && submitButton) {
+        uploadForm.addEventListener('submit', function(event) {
+            const zipFileInput = document.getElementById('zipfile');
+            if (zipFileInput && zipFileInput.files.length > 0) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang tải lên...';
+                processingIndicator.style.display = 'block';
+            } else {
+                event.preventDefault(); 
+                alert('Vui lòng chọn một file ZIP để tải lên.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

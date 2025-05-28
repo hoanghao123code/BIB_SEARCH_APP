@@ -17,6 +17,10 @@ def user_search_page():
     admin_logged_in = 'user_id' in session and session.get('role') == 'admin'
     admin_username = session.get('username') if admin_logged_in else None
 
+    user_logged_in = 'user_id' in session and session.get('role') == 'user'
+    user_username = session.get('username') if user_logged_in else None
+
+
     all_races, total_races, err_races = get_all_event(page=1, per_page=default_per_page)
     if err_races:
         flash(f"Không thể lấy danh sách giải chạy: {err_races}", "error")
@@ -36,6 +40,8 @@ def user_search_page():
                           selected_moment="all",
                           admin_logged_in=admin_logged_in,
                           admin_username=admin_username,
+                          user_logged_in=user_logged_in,
+                          user_username=user_username,
                           current_year=datetime.datetime.now().year,
                           current_page=1,
                           per_page=default_per_page)
@@ -46,6 +52,8 @@ def ajax_search():
     race_event_filter = request.args.get('race_event_filter', "all").strip()
     moment_filter = request.args.get('moment_filter', "all").strip()
     # print(search_term, selected_race_event, selected_moment)
+    bib_number = bib_number.replace(" ", "")
+    print(bib_number)
     try:
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', default_per_page))

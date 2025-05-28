@@ -33,10 +33,6 @@
                     <li><a class="dropdown-item" href="{{ url_for('admin.admin_logout_route') }}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                 </ul>
             </div>
-             <!-- <div class="admin-user-info">
-                <span><i class="fas fa-user-circle"></i> Chào, {{ username or "Admin" }}!</span>
-                <a href="{{ url_for('admin.admin_logout_route') }}" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-            </div> -->
         {% else %}
             <a class="btn btn-sm btn-admin-login" href="{{ url_for('admin.admin_login_route') }}">
                 <i class="fas fa-user-shield"></i> Đăng nhập

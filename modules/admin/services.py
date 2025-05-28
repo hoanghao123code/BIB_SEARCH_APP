@@ -239,6 +239,7 @@ def create_user_service(username, password, role, email):
         'username': username,
         'password_hash': hashed_password,
         'role': role,
+        'email': email,  
         'created_at': firestore.SERVER_TIMESTAMP
     }
     try:
